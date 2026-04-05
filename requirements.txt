@@ -7,3 +7,4 @@ pypdf
 tiktoken
 python-dotenv
 google.generativeai
+faiss
