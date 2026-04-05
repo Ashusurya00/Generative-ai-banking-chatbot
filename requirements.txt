@@ -1,3 +1,8 @@
-dotenv
-google.generativeai
-faiss
+streamlit
+openai
+langchain
+langchain-community
+chromadb
+pypdf
+tiktoken
+python-dotenv
