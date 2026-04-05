@@ -7,4 +7,5 @@ pypdf
 tiktoken
 python-dotenv
 google.generativeai
+sentence_transformers
 
