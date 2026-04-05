@@ -1,11 +1,6 @@
 streamlit
-openai
-langchain
-langchain-community
+google-generativeai
 chromadb
+sentence-transformers
 pypdf
-tiktoken
 python-dotenv
-google.generativeai
-sentence_transformers
-
