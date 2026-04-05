@@ -1,9 +1,10 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-import faiss
 from sentence_transformers import SentenceTransformer
 from pypdf import PdfReader
+import chromadb
+from chromadb.utils import embedding_functions
 
 # -------- LOAD ENV -------- #
 load_dotenv()
@@ -44,18 +45,28 @@ chunks = split_text(documents)
 
 # -------- EMBEDDINGS -------- #
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = embedder.encode(chunks)
 
-# -------- FAISS INDEX -------- #
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(embeddings)
+# -------- CHROMA DB -------- #
+chroma_client = chromadb.Client()
+
+collection = chroma_client.create_collection(
+    name="banking_docs"
+)
+
+# Add documents to Chroma
+for i, chunk in enumerate(chunks):
+    collection.add(
+        documents=[chunk],
+        ids=[str(i)]
+    )
 
 # -------- RETRIEVAL -------- #
 def retrieve(query, k=3):
-    query_vec = embedder.encode([query])
-    distances, indices = index.search(query_vec, k)
-    return [chunks[i] for i in indices[0]]
+    results = collection.query(
+        query_texts=[query],
+        n_results=k
+    )
+    return results["documents"][0]
 
 # -------- MAIN FUNCTION -------- #
 def ask_question(query):
